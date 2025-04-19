@@ -107,7 +107,14 @@ import ProductCard from "@/app/components/product/product-card";
 import { Suspense } from "react";
 import { Product } from "@/types/product";
 
-// Sanity client configuration
+// ✅ Define correct PageProps
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+// ✅ Sanity client config
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
@@ -115,13 +122,7 @@ const client = createClient({
   useCdn: process.env.NODE_ENV === "production",
 });
 
-export interface PageProps {
-  params: {
-    slug: string;
-  };
-}
-
-// Function to get a collection by slug
+// ✅ Fetch collection by slug
 async function getCollection(slug: string) {
   return await client.fetch(
     `*[_type == "collection" && slug.current == $slug][0] {
@@ -135,7 +136,7 @@ async function getCollection(slug: string) {
   );
 }
 
-// Function to get products by collection
+// ✅ Fetch products for the collection
 async function getProductsByCollection(collectionId: string) {
   return (
     (await client.fetch(
@@ -156,9 +157,9 @@ async function getProductsByCollection(collectionId: string) {
   );
 }
 
-// Collection page
+// ✅ Dynamic route component
 export default async function CollectionPage({ params }: PageProps) {
-  const slug = params.slug;
+  const { slug } = params;
 
   const collection = await getCollection(slug);
   if (!collection) return notFound();
@@ -178,7 +179,9 @@ export default async function CollectionPage({ params }: PageProps) {
         />
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div className="text-center text-white max-w-3xl px-4">
-            <h1 className="text-4xl md:text-5xl font-serif font-light mb-4">{collection.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-serif font-light mb-4">
+              {collection.title}
+            </h1>
             {collection.description && (
               <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
                 {collection.description}
@@ -188,12 +191,16 @@ export default async function CollectionPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Products */}
+      {/* Product Grid */}
       <div className="mb-8">
-        <h2 className="text-2xl font-serif font-light mb-6">Products in this Collection</h2>
+        <h2 className="text-2xl font-serif font-light mb-6">
+          Products in this Collection
+        </h2>
         {products.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <p className="text-lg text-gray-600">No products found in this collection.</p>
+            <p className="text-lg text-gray-600">
+              No products found in this collection.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -212,6 +219,17 @@ export default async function CollectionPage({ params }: PageProps) {
       </div>
     </div>
   );
+}
+
+// ✅ Static paths for prerendering
+export async function generateStaticParams() {
+  const collections = await client.fetch(
+    `*[_type == "collection"]{ "slug": slug.current }`
+  );
+
+  return collections.map((collection: { slug: string }) => ({
+    slug: collection.slug,
+  }));
 }
 
 
