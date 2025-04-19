@@ -4,7 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { subscribeToNewsletter } from "@/app/lib/home-actions";
+
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
@@ -17,22 +17,7 @@ export default function NewsletterSection() {
     setIsSubmitting(true);
     setError("");
 
-    try {
-      await subscribeToNewsletter(email);
-      setIsSuccess(true);
-      setEmail("");
-
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 3000);
-    } catch (err) {
-      console.error("Failed to subscribe:", err);
-      setError("Failed to subscribe. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  }
 
   return (
     <section className="w-full py-20 bg-[#443627] text-white">

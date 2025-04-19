@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -20,38 +20,36 @@ export default function HeroSection({ banners }: { banners: Banner[] }) {
   const [isAnimating, setIsAnimating] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    startAutoSlide()
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-    }
-  }, [])
 
-  const startAutoSlide = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current)
-    intervalRef.current = setInterval(() => {
-      if (!isAnimating) {
-        nextBanner()
-      }
-    }, 6000)
-  }
-
-  const nextBanner = () => {
+  const nextBanner = useCallback(() => {
     if (isAnimating) return
     setIsAnimating(true)
     setCurrentBanner((prev) => (prev + 1) % banners.length)
     setTimeout(() => setIsAnimating(false), 700)
-    startAutoSlide()
-  }
+  }, [isAnimating, banners.length])
 
   const prevBanner = () => {
     if (isAnimating) return
     setIsAnimating(true)
     setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length)
     setTimeout(() => setIsAnimating(false), 700)
-    startAutoSlide()
   }
-
+  useEffect(() => {
+    const startAutoSlide = () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      intervalRef.current = setInterval(() => {
+        if (!isAnimating) {
+          nextBanner()
+        }
+      }, 6000)
+    }
+  
+    startAutoSlide()
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [isAnimating, nextBanner])
+  
   if (!banners.length) return null
 
   return (
@@ -124,7 +122,6 @@ export default function HeroSection({ banners }: { banners: Banner[] }) {
             }`}
             onClick={() => {
               setCurrentBanner(index)
-              startAutoSlide()
             }}
           />
         ))}
@@ -132,4 +129,3 @@ export default function HeroSection({ banners }: { banners: Banner[] }) {
     </div>
   )
 }
-

@@ -24,7 +24,7 @@ export default function CartQuantity({ item }: { item: CartItem }) {
     if (newQuantity === item.quantity) return;
 
     setIsUpdating(true);
-    try {
+   {
       const { updateCartItemQuantity } = await import("@/app/lib/actions");
       const result = await updateCartItemQuantity(item._id, newQuantity);
 
@@ -34,23 +34,13 @@ export default function CartQuantity({ item }: { item: CartItem }) {
           title: "Cart updated",
           description: "Item quantity has been updated.",
         });
-      } else {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to update quantity",
-        });
-        setQuantity(item.quantity);
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-      });
-      setQuantity(item.quantity);
-    } finally {
-      setIsUpdating(false);
-    }
+      } 
+    }  
+     
+      
+   
   };
+
 
   return (
     <div className="flex items-center">

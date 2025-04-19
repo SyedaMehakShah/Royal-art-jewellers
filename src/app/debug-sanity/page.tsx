@@ -9,7 +9,7 @@ export default async function DebugSanityPage() {
   })
 
   let sanityStatus = "Unknown"
-  let error = null
+ 
   let projectDetails = null
 
   try {
@@ -18,7 +18,7 @@ export default async function DebugSanityPage() {
     sanityStatus = "Connected"
   } catch (err) {
     console.error("Error connecting to Sanity:", err)
-    error = err
+    // error = err
     sanityStatus = "Error"
   }
 

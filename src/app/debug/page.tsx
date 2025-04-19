@@ -1,4 +1,5 @@
 import { getProducts } from "@/app/lib/sanity-utils";
+import { Product } from "@/types/product";
 import Image from "next/image";
 
 export default async function DebugPage() {
@@ -35,7 +36,7 @@ export default async function DebugPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.map((product: any) => (
+          {products.map((product: Product) => (
             <div key={product._id} className="border p-4 rounded">
               <h2 className="font-bold">{product.name}</h2>
               <p>Slug: {product.slug}</p>

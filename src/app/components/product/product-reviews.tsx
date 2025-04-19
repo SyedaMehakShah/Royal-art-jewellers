@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Star, User } from "lucide-react";
 import Button from "@/app/components/ui/button";
 import { Textarea } from "@/app/components/ui/textarea";
-// import { Input } from "@/app/components/ui/input"
 import { useToast } from "@/hooks/use-toast";
 
 interface Review {
@@ -25,11 +24,23 @@ export default function ProductReviews({ productId }: { productId: string }) {
   useEffect(() => {
     async function loadReviews() {
       try {
-        const  getProductReviews  = await import("@/app/lib/actions");
+        const { getProductReviews } = await import("@/app/lib/actions");
         const data = await getProductReviews(productId);
-        setReviews(data);
+        if (data.success && Array.isArray(data.reviews)) {
+          setReviews(data.reviews);
+        } else {
+          console.error("Invalid reviews data:", data);
+          toast({
+            title: "Error",
+            description: "Failed to load reviews. Please try again later.",
+          });
+        }
       } catch (error) {
         console.error("Failed to load reviews:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load reviews. Please try again later.",
+        });
       } finally {
         setLoading(false);
       }
@@ -38,7 +49,12 @@ export default function ProductReviews({ productId }: { productId: string }) {
     loadReviews();
   }, [productId]);
 
-  const handleSubmitReview = async (formData: FormData) => {
+  const handleSubmitReview = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formData.append("productId", productId);
+    formData.append("rating", userRating.toString());
+
     try {
       const { submitReview } = await import("@/app/lib/actions");
       const result = await submitReview(formData);
@@ -49,7 +65,6 @@ export default function ProductReviews({ productId }: { productId: string }) {
           description: "Thank you for your feedback!",
         });
 
-        // Add the new review to the list
         if (result.review) {
           setReviews([result.review, ...reviews]);
         }
@@ -57,14 +72,13 @@ export default function ProductReviews({ productId }: { productId: string }) {
         toast({
           title: "Error",
           description: result.error || "Failed to submit review",
-          // variant: "destructive",
         });
       }
     } catch (error) {
+      console.error("Error submitting review:", error);
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
-        // variant: "destructive",
       });
     }
   };
@@ -73,14 +87,9 @@ export default function ProductReviews({ productId }: { productId: string }) {
     <div>
       <div className="mb-8">
         <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
-        <form action={handleSubmitReview}>
-          <input type="hidden" name="productId" value={productId} />
-          <input type="hidden" name="rating" value={userRating} />
-
+        <form onSubmit={handleSubmitReview}>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              Your Rating
-            </label>
+            <label className="block text-sm font-medium mb-2">Your Rating</label>
             <div className="flex">
               {[1, 2, 3, 4, 5].map((rating) => (
                 <button
@@ -104,17 +113,15 @@ export default function ProductReviews({ productId }: { productId: string }) {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium mb-2">
-              Your Name
-            </label>
-            {/* <Input id="name" name="name" required /> */}
-          </div>
-
-          <div className="mb-4">
             <label htmlFor="comment" className="block text-sm font-medium mb-2">
               Your Review
             </label>
-            <Textarea id="comment" name="comment" rows={4} required />
+            <Textarea
+              id="comment"
+              name="comment"
+              rows={4}
+              required
+            />
           </div>
 
           <Button type="submit" label="Submit Review">
@@ -148,7 +155,11 @@ export default function ProductReviews({ productId }: { productId: string }) {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-4 w-4 ${i < review.rating ? "text-[#443627] fill-[#443627]" : "text-gray-300"}`}
+                        className={`h-4 w-4 ${
+                          i < review.rating
+                            ? "text-[#443627] fill-[#443627]"
+                            : "text-gray-300"
+                        }`}
                       />
                     ))}
                   </div>

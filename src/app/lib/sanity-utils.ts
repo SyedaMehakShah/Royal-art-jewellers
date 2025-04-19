@@ -9,7 +9,7 @@ const client = createClient({
 })
 
 export async function getBanners() {
-  try {
+  
     return (
       (await client.fetch(`*[_type == "banner"] | order(order asc) {
       _id,
@@ -19,11 +19,8 @@ export async function getBanners() {
       link
     }`)) || []
     )
-  } catch (error) {
-   
-    return []
-  }
-}
+  } 
+
 
 export async function getFeaturedCollections() {
   try {

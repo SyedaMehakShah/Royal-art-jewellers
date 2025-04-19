@@ -44,7 +44,7 @@ export default async function CollectionsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {collections.map((collection : any) => (
+          {collections.map((collection: { _id: string; title: string; slug: string; image: string; description?: string }) => (
             <Link href={`/collections/${collection.slug}`} key={collection._id}>
               <div className="group relative overflow-hidden cursor-pointer rounded-lg shadow-md">
                 <div className="relative h-[300px] w-full overflow-hidden">

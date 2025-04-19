@@ -44,7 +44,7 @@ export default function AdminGuidePage() {
                 </li>
               </ul>
             </li>
-            <li>Click "Publish" to save the collection</li>
+            <li>Click &quot;Publish&quot; to save the collection</li>
           </ol>
   
           <h3>Step 3: Create Products and Associate with Collections</h3>
@@ -76,7 +76,7 @@ export default function AdminGuidePage() {
                   <strong>Category:</strong> Select the appropriate category
                 </li>
                 <li>
-                  <strong>Collections:</strong> Click "Add item" and search for the collection(s) you want to associate
+                  <strong>Collections:</strong> Click &quot;Add item&quot; and search for the collection(s) you want to associate
                   this product with
                 </li>
                 <li>Fill in other fields as needed (Metal Type, Weight, Purity, etc.)</li>
@@ -120,7 +120,7 @@ export default function AdminGuidePage() {
           <h3>Troubleshooting Common Issues</h3>
           <ul>
             <li>
-              <strong>Products not appearing in collections:</strong> Make sure you've properly referenced the collection
+              <strong>Products not appearing in collections:</strong> Make sure you&apos;ve properly referenced the collection
               in the product&apos;s &quot;`Collections&quot; field
             </li>
             <li>

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import Image from "next/image"
 import ProductCard from "@/app/components/product/product-card"
 import { Suspense } from "react"
-
+import { Product } from "@/types/product"
 // Create Sanity client
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -91,7 +91,7 @@ export default async function CollectionPage({ params }: { params: { slug: strin
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product : any) => (
+            {products.map((product: Product) => (
               <Suspense key={product._id} fallback={<div className="h-80 bg-gray-100 animate-pulse rounded-lg"></div>}>
                 <ProductCard product={product} />
               </Suspense>

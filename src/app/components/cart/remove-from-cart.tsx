@@ -27,12 +27,6 @@ export default function RemoveFromCart({ itemId }: { itemId: string }) {
          
         });
       }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        
-      });
     } finally {
       setIsRemoving(false);
     }

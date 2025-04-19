@@ -30,9 +30,11 @@ export async function subscribeToNewsletter(email: string) {
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     return { success: true }
-  } catch (error) {
-   
+  }
+  catch (error) {
     throw new Error("Failed to subscribe to newsletter")
   }
+  
+  
 }
 

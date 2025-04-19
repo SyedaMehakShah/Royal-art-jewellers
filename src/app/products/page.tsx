@@ -28,13 +28,7 @@ export default async function ProductsPage({
     : searchParams.sort || "createdAt";
 
   let products: Product[] = [];
-  try {
-   
-    products = await getProducts({ limit: 100, sort, category });
-    
-  } catch (error: any) {
-    products = []; // Ensure we handle the error gracefully by defaulting to an empty array.
-  }
+  
 
   return (
     <div className="container mx-auto px-4 py-8">

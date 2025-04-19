@@ -20,22 +20,24 @@ export async function getCart() {
     return null;
   }
 
-  const cart = await client.fetch(`*[_type == "cart" && _id == "${cartId}"][0] {
-    _id,
-    "items": items[] {
-      _key,
-      "_id": _key,
-      quantity,
-      size,
-      "product": product-> {
-        _id,
-        name,
-        "slug": slug.current,
-        price,
-        "images": images[].asset->url
+  const cart = await client.fetch(`
+    *[_type == "cart" && _id == "${cartId}"][0] {
+      _id,
+      "items": items[] {
+        _key,
+        "_id": _key,
+        quantity,
+        size,
+        "product": product-> {
+          _id,
+          name,
+          "slug": slug.current,
+          price,
+          "images": images[].asset->url
+        }
       }
     }
-  }`);
+  `);
 
   return cart;
 }
@@ -66,7 +68,7 @@ export async function addToCart(formData: FormData): Promise<{ success: boolean;
       });
 
       cartId = newCart._id;
-      const responseCookies = cookies() as any;
+      const responseCookies = await cookies();
       responseCookies.set("cartId", cartId, { maxAge: 60 * 60 * 24 * 30 });
     } else {
       const cart = await client.fetch(`*[_type == "cart" && _id == "${cartId}"][0]`);
@@ -76,9 +78,8 @@ export async function addToCart(formData: FormData): Promise<{ success: boolean;
       }
 
       const existingItemIndex = cart.items?.findIndex(
-        (item: any) => item.product._ref === productId && item.size === size
-      );
-
+        (item: { product: { _ref: string }; size?: string }) => item.product._ref === productId && item.size === size
+      )
       if (existingItemIndex > -1) {
         await client
           .patch(cartId)
@@ -106,7 +107,7 @@ export async function addToCart(formData: FormData): Promise<{ success: boolean;
 
     revalidatePath("/cart");
     return { success: true };
-  } catch (err) {
+  } catch (error) {
     return { success: false, error: "Failed to add to cart" };
   }
 }
@@ -160,7 +161,7 @@ export async function removeFromCart(itemId: string) {
   }
 }
 
-// Wishlist
+// Wishlist Actions
 export async function addToWishlist(formData: FormData): Promise<{ success: boolean; error?: string }> {
   const productId = formData.get("productId") as string;
 
@@ -182,17 +183,13 @@ export async function addToWishlist(formData: FormData): Promise<{ success: bool
 
       wishlistId = newWishlist._id;
       const responseCookies = cookies() as any;
-      responseCookies.set("wishlistId", wishlistId, {
-        maxAge: 60 * 60 * 24 * 30,
-      });
+      responseCookies.set("wishlistId", wishlistId, { maxAge: 60 * 60 * 24 * 30 });
     } else {
       const wishlist = await client.fetch(`*[_type == "wishlist" && _id == "${wishlistId}"][0]`);
 
       if (!wishlist) return { success: false, error: "Wishlist not found" };
 
-      const existingItemIndex = wishlist.items?.findIndex(
-        (item: any) => item.product._ref === productId
-      );
+      const existingItemIndex = wishlist.items?.findIndex((item: any) => item.product._ref === productId);
 
       if (existingItemIndex === -1) {
         await client
@@ -215,7 +212,26 @@ export async function addToWishlist(formData: FormData): Promise<{ success: bool
   }
 }
 
-// Reviews
+export async function getProductReviews(productId: string) {
+  try {
+    // Fetching reviews for the given product ID
+    const reviews = await client.fetch(
+      `*[_type == "review" && product._ref == "${productId}"] | order(createdAt desc) {
+        _id,
+        name,
+        rating,
+        comment,
+        createdAt
+      }`
+    );
+
+    return { success: true, reviews };
+  } catch (error) {
+    return { success: false, error: "Failed to fetch reviews" };
+  }
+}
+
+// Reviews Actions
 export async function submitReview(formData: FormData) {
   const productId = formData.get("productId") as string;
   const name = formData.get("name") as string;
@@ -272,6 +288,7 @@ export async function submitReview(formData: FormData) {
   }
 }
 
+// Order Placement
 export async function placeOrder(formData: FormData) {
   const cartId = (await cookies()).get("cartId")?.value;
 
@@ -311,7 +328,7 @@ export async function placeOrder(formData: FormData) {
       items: cart.items.map((item: any) => ({
         product: {
           _type: "reference",
-          _ref: item.product._id || item.product._ref, // ensure it's a valid ref
+          _ref: item.product._id || item.product._ref,
         },
         quantity: item.quantity,
         price: item.product.price,

@@ -1,7 +1,7 @@
 "use server"
 
 
-import { createClient } from "next-sanity";
+// import { createClient } from "next-sanity";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { client } from "@/sanity/lib/client";
@@ -32,8 +32,9 @@ export async function addToWishlistAction(formData: FormData): Promise<{ success
       const wishlist = await client.fetch(`*[_type == "wishlist" && _id == "${wishlistId}"][0]`);
 
       if (wishlist) {
+        type WishlistItem = { product: { _ref: string } };
         const existingItemIndex = wishlist.items?.findIndex(
-          (item: any) => item.product._ref === productId
+          (item: WishlistItem) => item.product._ref === productId
         );
 
         if (existingItemIndex === -1 || existingItemIndex === undefined) {
@@ -52,17 +53,19 @@ export async function addToWishlistAction(formData: FormData): Promise<{ success
     }
 
     revalidatePath("/wishlist");
+    return { success: true };
   } catch (error) {
-    
+    console.error("Failed to add to wishlist:", error);
     return { success: false, error: "Failed to add to wishlist" };
   }
-
-  return { success: true };
 }
 
-// src/lib/home-actions.ts
+// // src/lib/home-actions.ts
 
-export async function subscribeToNewsletter(email: string): Promise<void> {
-  // Replace with your logic — e.g., send to API or save in DB
-  console.log(`Subscribing ${email} to the newsletter...`)
-}
+// export async function subscribeToNewsletter(email: string): Promise<void> {
+//   // Replace with your logic — e.g., send to API or save in DB
+//   console.log(`Subscribing ${email} to the newsletter...`)
+// }
+
+
+

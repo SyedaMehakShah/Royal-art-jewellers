@@ -26,7 +26,7 @@ export default function CheckoutForm() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     setIsSubmitting(true);
-    try {
+    {
       const { placeOrder } = await import("@/app/lib/actions");
       const result: { success: boolean; error?: string; orderId?: string } = await placeOrder(formData);
 
@@ -43,13 +43,7 @@ export default function CheckoutForm() {
         });
         setIsSubmitting(false);
       }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-      });
-      setIsSubmitting(false);
-    }
+    } 
   };
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
