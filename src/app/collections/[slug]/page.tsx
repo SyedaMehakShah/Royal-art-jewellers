@@ -158,7 +158,8 @@ async function getProductsByCollection(collectionId: string) {
 }
 
 // ✅ Dynamic route component
-export default async function CollectionPage({ params }: PageProps) {
+const CollectionPage = async ({ params }: PageProps) => {
+
   const { slug } = params;
 
   const collection = await getCollection(slug);
@@ -231,5 +232,7 @@ export async function generateStaticParams() {
     slug: collection.slug,
   }));
 }
+
+export default CollectionPage
 
 
