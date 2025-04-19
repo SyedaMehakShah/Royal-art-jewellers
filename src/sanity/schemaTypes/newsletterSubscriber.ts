@@ -1,5 +1,5 @@
 import { Rule } from "sanity"
-export default {
+const newsletterSchema = {
     name: "newsletterSubscriber",
     title: "Newsletter Subscribers",
     type: "document",
@@ -24,5 +24,8 @@ export default {
       },
     },
   }
+
+
+export default newsletterSchema
   
   

@@ -6,13 +6,12 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
-  token: process.env.SANITY_API_TOKEN, 
+  useCdn: true,
+  token: process.env.SANITY_API_TOKEN,
 })
-
 
 const builder = imageUrlBuilder(client);
 
-export function urlFor(source: any) {
+export function urlFor(source: { _type: string; asset: { _ref: string } }) {
   return builder.image(source);
 }

@@ -1,4 +1,4 @@
-export default {
+const orderSchema =  {
     name: "order",
     title: "Order",
     type: "document",
@@ -107,3 +107,5 @@ export default {
     
   }
   
+
+export default orderSchema

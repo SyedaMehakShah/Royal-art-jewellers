@@ -16,25 +16,16 @@ export async function subscribeToNewsletter(email: string) {
   }
 
   try {
-    // Here you would typically save the email to your database or send it to your email service
-    // For now, we'll just simulate a successful subscription
-
-    // If you want to save to Sanity, you could do something like:
     await client.create({
       _type: "newsletterSubscriber",
       email,
       subscribedAt: new Date().toISOString(),
     })
 
-    // Simulate a delay
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     return { success: true }
-  }
-  catch (error) {
+  } catch {
     throw new Error("Failed to subscribe to newsletter")
   }
-  
-  
 }
-

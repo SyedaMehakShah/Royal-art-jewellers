@@ -1,4 +1,5 @@
 "use server"
+
 import { createClient } from "next-sanity"
 
 const client = createClient({
@@ -9,18 +10,16 @@ const client = createClient({
 })
 
 export async function getBanners() {
-  
-    return (
-      (await client.fetch(`*[_type == "banner"] | order(order asc) {
+  return (
+    (await client.fetch(`*[_type == "banner"] | order(order asc) {
       _id,
       title,
       subtitle,
       "image": image.asset->url,
       link
     }`)) || []
-    )
-  } 
-
+  )
+}
 
 export async function getFeaturedCollections() {
   try {
@@ -32,8 +31,7 @@ export async function getFeaturedCollections() {
       "image": image.asset->url
     }`)) || []
     )
-  } catch (error) {
-    
+  } catch {
     return []
   }
 }
@@ -49,8 +47,8 @@ export async function getAllCollections() {
       description
     }`)) || []
     )
-  } catch (error) {
-    console.error("Error fetching all collections:", error)
+  } catch {
+    console.error("Error fetching all collections:")
     return []
   }
 }
@@ -64,8 +62,7 @@ export async function getCollection(slug: string) {
       "image": image.asset->url,
       description
     }`)
-  } catch (error) {
-   
+  } catch {
     return null
   }
 }
@@ -86,8 +83,8 @@ export async function getProductsByCollection(collectionId: string) {
       reviewCount
     }`)) || []
     )
-  } catch (error) {
-    console.error(`Error fetching products for collection ${collectionId}:`, error)
+  } catch {
+    console.error(`Error fetching products for collection ${collectionId}:`)
     return []
   }
 }
@@ -121,12 +118,11 @@ export async function getProducts({
       reviewCount
     }`
 
-   
     const products = await client.fetch(query)
-    
+
     return products || []
-  } catch (error) {
-    console.error("Error fetching products:", error)
+  } catch {
+    console.error("Error fetching products:")
     return []
   }
 }
@@ -154,10 +150,10 @@ export async function getProduct(slug: string) {
       rating,
       reviewCount
     }`)
-   
+
     return product
-  } catch (error) {
-    console.error(`Error fetching product with slug ${slug}:`, error)
+  } catch {
+    console.error(`Error fetching product with slug ${slug}:`)
     return null
   }
 }
@@ -178,8 +174,8 @@ export async function getRelatedProducts(productId: string, category: string, li
       reviewCount
     }`)) || []
     )
-  } catch (error) {
-    console.error("Error fetching related products:", error)
+  } catch {
+    console.error("Error fetching related products:")
     return []
   }
 }
@@ -195,9 +191,8 @@ export async function getProductReviews(productId: string) {
       createdAt
     }`)) || []
     )
-  } catch (error) {
-    console.error("Error fetching product reviews:", error)
+  } catch {
+    console.error("Error fetching product reviews:")
     return []
   }
 }
-

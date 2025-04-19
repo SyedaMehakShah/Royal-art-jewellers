@@ -1,4 +1,5 @@
-import { Suspense } from "react";
+"use client"
+import { Suspense, useEffect, useState } from "react";
 import ProductCard from "@/app/components/product/product-card";
 import { getProducts } from "@/app/lib/sanity-utils";
 
@@ -14,7 +15,7 @@ type Product = {
   reviewCount: number;
 };
 
-export default async function ProductsPage({
+export default function ProductsPage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -22,13 +23,21 @@ export default async function ProductsPage({
   const category = Array.isArray(searchParams.category)
     ? searchParams.category[0]
     : searchParams.category || "";
-
   const sort = Array.isArray(searchParams.sort)
     ? searchParams.sort[0]
     : searchParams.sort || "createdAt";
 
-  let products: Product[] = [];
-  
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Fetch products based on category and sort order
+    const fetchProducts = async () => {
+      const fetchedProducts = await getProducts({ category, sort });
+      setProducts(fetchedProducts);
+    };
+
+    fetchProducts();
+  }, [category, sort]);
 
   return (
     <div className="container mx-auto px-4 py-8">

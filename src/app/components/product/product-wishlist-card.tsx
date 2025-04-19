@@ -43,7 +43,7 @@ export default function ProductWishlistCard({
         <Image
           src={
             product.images[0]
-              ? urlFor(product.images[0]).width(300).url()
+              ? urlFor({ _type: "image", asset: { _ref: product.images[0].url } }).width(300).url()
               : "/placeholder.svg?height=300&width=300"
           }
           alt={product.images[0]?.alt || product.name}

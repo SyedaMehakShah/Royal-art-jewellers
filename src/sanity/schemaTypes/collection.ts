@@ -1,5 +1,5 @@
 import { Rule } from "sanity"
-export default {
+const collectionSchema = {
     name: "collection",
     title: "Collection",
     type: "document",
@@ -63,4 +63,4 @@ export default {
     },
   }
   
-  
+export default collectionSchema

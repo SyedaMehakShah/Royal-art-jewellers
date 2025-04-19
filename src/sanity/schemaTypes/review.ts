@@ -1,5 +1,5 @@
 import { Rule } from "sanity"
-export default {
+const reviewSchema =  {
     name: "review",
     title: "Review",
     type: "document",
@@ -38,4 +38,4 @@ export default {
     ],
   }
   
-  
+export default reviewSchema
