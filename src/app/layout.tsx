@@ -6,6 +6,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import Header from "@/app/components/layout/header"
 import Footer from "@/app/components/layout/footer"
 import { Toaster } from "@/app/components/ui/toaster"
+import Head from "next/head";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,6 +36,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+       <Head>
+        <meta
+          name="google-site-verification"
+          content="-kNSaDHiy3J8oTzruePz_RW9V8Ui2D0cKHw8ASgrkbY"
+        />
+      </Head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`} suppressHydrationWarning>
         <ClerkProvider>
           <div className="flex min-h-screen flex-col">
