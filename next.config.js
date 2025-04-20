@@ -6,12 +6,13 @@
 
 // export default nextConfig;
 
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
     domains: ['cdn.sanity.io'],
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
