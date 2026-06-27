@@ -60,7 +60,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-800 mb-1">Email Us</h3>
-                    <p className="text-gray-600">info@imranwalipatel.com</p>
+                    <p className="text-gray-600">rizwanpatel2000@gmail.com</p>
                   </div>
                 </div>
 
