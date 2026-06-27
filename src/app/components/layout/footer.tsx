@@ -90,10 +90,7 @@ export default function Footer() {
                 <MapPin className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0 text-[#443627]" />
                 <span className="text-gray-400">Shop # NP-12/4 Kundan Street Mithadar Sarafa Bazar Karachi Pakistan.</span>
               </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-[#443627]" />
-                <span className="text-gray-400">Imran : +92 3232876146</span>
-              </li>
+              
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-[#443627]" />
                 <span className="text-gray-400">Rizwan: +92 3213785176</span>
